@@ -806,7 +806,7 @@ MonoBehaviour:
   groundCheck: {fileID: 318607560}
   groundCheckRadius: 0.2
   dialogueUI: {fileID: 146804588}
-  moveSpeedRight: 0.1
+  moveSpeedRight: 2
 --- !u!1 &1947431040
 GameObject:
   m_ObjectHideFlags: 0
