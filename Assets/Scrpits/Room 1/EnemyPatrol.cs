@@ -55,8 +55,8 @@ public class EnemyPatrol : MonoBehaviour
             }
         }
 
-        // Opcional: Rotar el sprite del enemigo para que mire en la dirección del movimiento
-        // Si tu sprite tiene una escala que controla la dirección, puedes hacer algo como esto:
+        // Rotar el sprite del enemigo para que mire en la dirección del movimiento
+        // 
         // if (movingRight && transform.localScale.x < 0 || !movingRight && transform.localScale.x > 0)
         // {
         //     transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
@@ -106,7 +106,7 @@ public class EnemyPatrol : MonoBehaviour
         }
     }
 
-    // Opcional: Visualizar el rango de detección en el editor
+    //Visualizar el rango de detección en el editor
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.cyan;

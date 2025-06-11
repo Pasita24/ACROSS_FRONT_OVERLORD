@@ -24,5 +24,4 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name); // Reinicia la escena actual
     }
 
-    // Puedes añadir más funciones aquí, como reiniciar nivel, pasar de nivel, etc.
 }
