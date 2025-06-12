@@ -3,7 +3,7 @@ using HeneGames.DialogueSystem;
 
 public class BossController : MonoBehaviour
 {
-    private enum BossState { Patrol, Idle, MovingRight }
+    private enum BossState { Patrol, Idle, MovingRight, MachineGun }
 
     [Header("Patrol Settings")]
     [SerializeField] private float moveSpeed = 3f; // Velocidad de patrulla
@@ -17,6 +17,10 @@ public class BossController : MonoBehaviour
     [Header("Dialogue Settings")]
     [SerializeField] private DialogueUI dialogueUI; // Referencia al DialogueUI
     [SerializeField] private float moveSpeedRight = 2f; // Velocidad constante para moverse a la derecha
+
+    [Header("Machine Gun Settings")]
+    [SerializeField] private Camera bossCamera; // Cámara para mostrar al boss
+    [SerializeField] private Transform punto1; // Punto de aparición del boss
 
     private Rigidbody2D rb;
     private Vector2 startPosition;
@@ -57,6 +61,9 @@ public class BossController : MonoBehaviour
                 break;
             case BossState.MovingRight:
                 UpdateMoveRight();
+                break;
+            case BossState.MachineGun:
+                UpdateMachineGun();
                 break;
         }
     }
@@ -124,6 +131,28 @@ public class BossController : MonoBehaviour
             gameObject.SetActive(false); // Desactivar el boss
             UnlockDialogueInput();
         }
+    }
+
+    public void StartMachineGunPhase()
+    {
+        // Reactivar el boss y moverlo a la posición de punto1
+        gameObject.SetActive(true);
+        if (punto1 != null)
+        {
+            transform.position = punto1.position;
+        }
+        ChangeState(BossState.MachineGun);
+
+        // Activar la BossCamera
+        if (bossCamera != null)
+        {
+            bossCamera.enabled = true;
+        }
+    }
+
+    private void UpdateMachineGun()
+    {
+        // Estado MachineGun sin funcionalidad de disparo
     }
 
     private void ChangeState(BossState newState)
