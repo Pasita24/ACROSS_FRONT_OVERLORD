@@ -12,6 +12,7 @@ public class MovimientoJugador : MonoBehaviour
     [Range(0, 0.3f)][SerializeField] private float suavizadoDeMovimiento;
     private Vector3 velocidad = Vector3.zero;
     private bool mirandoDerecha = true;
+    private bool movimientoPausado = false;
 
     [Header("Salto")]
     [SerializeField] private float fuerzaDeSalto;
@@ -28,6 +29,8 @@ public class MovimientoJugador : MonoBehaviour
 
     private void Update()
     {
+        if (movimientoPausado) return;
+
         movimientoHorizontal = Input.GetAxisRaw("Horizontal") * velocidadDeMovimiento;
 
         if (Input.GetButtonDown("Jump"))
@@ -38,6 +41,12 @@ public class MovimientoJugador : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (movimientoPausado)
+        {
+            rb2D.velocity = new Vector2(0f, rb2D.velocity.y); // Mantener velocidad vertical para gravedad
+            return;
+        }
+
         enSuelo = Physics2D.OverlapBox(controladorSuelo.position, dimensionesCaja, 0f, queEsSuelo);
 
         Mover(movimientoHorizontal * Time.fixedDeltaTime, salto);
@@ -47,6 +56,8 @@ public class MovimientoJugador : MonoBehaviour
 
     private void Mover(float mover, bool saltar)
     {
+        if (movimientoPausado) return;
+
         Vector3 velocidadObjetivo = new Vector2(mover, rb2D.velocity.y);
         rb2D.velocity = Vector3.SmoothDamp(rb2D.velocity, velocidadObjetivo, ref velocidad, suavizadoDeMovimiento);
 
@@ -76,5 +87,18 @@ public class MovimientoJugador : MonoBehaviour
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireCube(controladorSuelo.position, dimensionesCaja);
+    }
+
+    public void PausarMovimiento()
+    {
+        movimientoPausado = true;
+        rb2D.velocity = new Vector2(0f, rb2D.velocity.y); // Mantener velocidad vertical para gravedad
+        rb2D.isKinematic = true;
+    }
+
+    public void HabilitarMovimiento()
+    {
+        movimientoPausado = false;
+        rb2D.isKinematic = false;
     }
 }
