@@ -135,7 +135,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   velocidad: 20
-  "da\xF1o": 0
+  "da\xF1o": 1
 --- !u!114 &7349780248493552394
 MonoBehaviour:
   m_ObjectHideFlags: 0

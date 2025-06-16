@@ -16,7 +16,8 @@ public class Bala : MonoBehaviour
     {
         if (other.CompareTag("Enemigo"))
         {
-            //Se integra logica de daño enemigo
+            other.GetComponent<Enemigo>().TomarDaño(daño);
+            Destroy(gameObject);
         }
     }
 }
