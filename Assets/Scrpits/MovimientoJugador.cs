@@ -93,12 +93,10 @@ public class MovimientoJugador : MonoBehaviour
     {
         movimientoPausado = true;
         rb2D.velocity = new Vector2(0f, rb2D.velocity.y); // Mantener velocidad vertical para gravedad
-        rb2D.isKinematic = true;
     }
 
     public void HabilitarMovimiento()
     {
         movimientoPausado = false;
-        rb2D.isKinematic = false;
     }
 }
