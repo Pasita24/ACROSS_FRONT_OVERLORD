@@ -34,7 +34,7 @@ public class movimientoPlataforma : MonoBehaviour
         velocidad *= -1;
     }
 
-    private void ODrawGizmos()
+    private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(controladorSuelo.transform.position, controladorSuelo.transform.position + Vector3.down * distancia);

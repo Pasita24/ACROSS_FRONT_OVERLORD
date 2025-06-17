@@ -5,6 +5,10 @@ using UnityEngine;
 public class MovimientoJugador : MonoBehaviour
 {
     private Rigidbody2D rb2D;
+    
+    [Header("Vida")]
+    [SerializeField] private float vida;
+    [SerializeField] private GameObject efectoMuerte;
 
     [Header("Movimiento")]
     private float movimientoHorizontal = 0f;
@@ -99,4 +103,28 @@ public class MovimientoJugador : MonoBehaviour
     {
         movimientoPausado = false;
     }
+
+    public void OnDetected()
+    {
+        movimientoPausado = true;
+        rb2D.velocity = Vector2.zero;
+        rb2D.isKinematic = true;
+
+        GetComponent<SpriteRenderer>().color = Color.red;
+    }
+    public void TomarDaño(float daño)
+    {
+        vida -= daño;
+        if (vida <= 0)
+        {
+            Muerte();
+        }
+    }
+
+    private void Muerte()
+    {
+        Instantiate(efectoMuerte, transform.position, Quaternion.identity);
+        Destroy(gameObject);
+    }
+
 }
