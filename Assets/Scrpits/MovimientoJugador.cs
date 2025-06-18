@@ -5,6 +5,7 @@ using UnityEngine;
 public class MovimientoJugador : MonoBehaviour
 {
     private Rigidbody2D rb2D;
+    private Vector2 input;
     
     [Header("Vida")]
     [SerializeField] private float vida;
@@ -29,17 +30,28 @@ public class MovimientoJugador : MonoBehaviour
     [Header("Animacion")]
     private Animator animator;
 
+    [Header("Escalar")]
+    [SerializeField] private float velocidadEscalar;
+    private BoxCollider2D boxCollider2D;
+    private float gravedadInicial;
+    private bool escalando;
+
     private void Start()
     {
         rb2D = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        boxCollider2D = GetComponent<BoxCollider2D>();
+        gravedadInicial = rb2D.gravityScale;
     }
 
     private void Update()
     {
+        input.x = Input.GetAxisRaw("Horizontal");
+        input.y = Input.GetAxisRaw("Vertical");
+
         if (movimientoPausado) return;
 
-        movimientoHorizontal = Input.GetAxisRaw("Horizontal") * velocidadDeMovimiento;
+        movimientoHorizontal = input.x * velocidadDeMovimiento;
         animator.SetFloat("Horizontal", Mathf.Abs(movimientoHorizontal));
 
         if (Input.GetButtonDown("Jump"))
@@ -59,6 +71,8 @@ public class MovimientoJugador : MonoBehaviour
         enSuelo = Physics2D.OverlapBox(controladorSuelo.position, dimensionesCaja, 0f, queEsSuelo);
 
         Mover(movimientoHorizontal * Time.fixedDeltaTime, salto);
+        
+        Escalar();
 
         salto = false;
     }
@@ -92,6 +106,26 @@ public class MovimientoJugador : MonoBehaviour
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y + 180, 0);
     }
 
+    private void Escalar()
+    {
+        if ((input.y != 0 || escalando) && (boxCollider2D.IsTouchingLayers(LayerMask.GetMask("Escaleras"))))
+        {
+            Vector2 velocidadSubida = new Vector2(rb2D.velocity.x, input.y * velocidadEscalar);
+            rb2D.velocity = velocidadSubida;
+            rb2D.gravityScale = 0;
+            escalando = true;
+
+        }
+        else
+        {
+            rb2D.gravityScale = gravedadInicial;
+            escalando = false;
+        }
+        if (enSuelo)
+        {
+            escalando = false;
+        }
+    }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
