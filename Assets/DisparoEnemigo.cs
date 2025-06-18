@@ -18,9 +18,10 @@ public class DisparoEnemigo : MonoBehaviour
     private void Start() {
         enemyShoot = GetComponent<EnemyShoot>();
     }
-    private void Update()
+private void Update()
 {
-    jugadorEnRango = Physics2D.Raycast(controladorDisparo.position, transform.right, distanciaLinea, capaJugador);
+    Vector2 direccionDisparo = new Vector2(Mathf.Sign(transform.localScale.x), 0f);
+    jugadorEnRango = Physics2D.Raycast(controladorDisparo.position, direccionDisparo, distanciaLinea, capaJugador);
 
     if (enemyShoot != null)
     {
@@ -37,14 +38,22 @@ public class DisparoEnemigo : MonoBehaviour
         }
     }
 }
-    private void Disparar()
-    {
-        Instantiate(balaEnemigo, controladorDisparo.position, controladorDisparo.rotation);   
-    }
+private void Disparar()
+{
+    GameObject bala = Instantiate(balaEnemigo, controladorDisparo.position, Quaternion.identity);
+
+    // Obtener la dirección dependiendo de flipX
+    bool flipX = GetComponent<SpriteRenderer>().flipX;
+    Vector2 direccion = flipX ? Vector2.right : Vector2.left;
+
+    bala.GetComponent<BalaEnemy>().SetDireccion(direccion);
+}
+
+
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(controladorDisparo.position, controladorDisparo.position + transform.right * distanciaLinea);
+        Vector2 direccionDisparo = new Vector2(Mathf.Sign(transform.localScale.x), 0f);
+        Gizmos.DrawLine(controladorDisparo.position, controladorDisparo.position + (Vector3)(direccionDisparo * distanciaLinea));
     }
 }

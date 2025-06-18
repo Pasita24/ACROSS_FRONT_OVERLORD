@@ -7,9 +7,16 @@ public class BalaEnemy : MonoBehaviour
     [SerializeField] private float velocidad;
     [SerializeField] private float daño;
 
+    private Vector2 direccion = Vector2.left; // Por defecto a la izquierda
+
+    public void SetDireccion(Vector2 nuevaDireccion)
+    {
+        direccion = nuevaDireccion.normalized;
+    }
+
     private void Update()
     {
-        transform.Translate(Vector2.left * velocidad * Time.deltaTime);
+        transform.Translate(direccion * velocidad * Time.deltaTime);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -21,3 +28,4 @@ public class BalaEnemy : MonoBehaviour
         }
     }
 }
+

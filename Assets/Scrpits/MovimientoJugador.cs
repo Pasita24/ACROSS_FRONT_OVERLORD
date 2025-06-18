@@ -1,11 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MovimientoJugador : MonoBehaviour
 {
     private Rigidbody2D rb2D;
     private Vector2 input;
+
+    [Header("UI Vida")]
+    [SerializeField] private TextMeshProUGUI textoVida;
     
     [Header("Vida")]
     [SerializeField] private float vida;
@@ -42,6 +47,7 @@ public class MovimientoJugador : MonoBehaviour
         animator = GetComponent<Animator>();
         boxCollider2D = GetComponent<BoxCollider2D>();
         gravedadInicial = rb2D.gravityScale;
+        ActualizarTextoVida();
     }
 
     private void Update()
@@ -71,7 +77,7 @@ public class MovimientoJugador : MonoBehaviour
         enSuelo = Physics2D.OverlapBox(controladorSuelo.position, dimensionesCaja, 0f, queEsSuelo);
 
         Mover(movimientoHorizontal * Time.fixedDeltaTime, salto);
-        
+
         Escalar();
 
         salto = false;
@@ -154,10 +160,15 @@ public class MovimientoJugador : MonoBehaviour
     public void TomarDaño(float daño)
     {
         vida -= daño;
+        ActualizarTextoVida();
         if (vida <= 0)
         {
             Muerte();
         }
+    }
+    private void ActualizarTextoVida()
+    {
+        textoVida.text = "Vida: " + Mathf.Max(vida, 0).ToString("0");
     }
 
     private void Muerte()
