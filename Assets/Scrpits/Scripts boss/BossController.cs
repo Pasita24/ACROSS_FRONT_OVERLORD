@@ -178,22 +178,15 @@ public class BossController : MonoBehaviour
         isShootingEnabled = true;
         shootingTimer = shootingDuration;
 
-        // Reactivar el weaponObject
-        if (weaponObject != null)
-        {
-            weaponObject.SetActive(true);
-        }
+        // Reactivar elementos visuales
+        if (weaponObject != null) weaponObject.SetActive(true);
+        if (shootingParticle != null) shootingParticle.Play();
 
-        // Iniciar la partícula de disparo si existe
-        if (shootingParticle != null)
-        {
-            shootingParticle.Play();
-        }
-
-        // CAMBIO PRINCIPAL: Reactivar los disparos automáticamente junto con el weaponObject
+        // Reactivación de disparos
         if (BulletZoneController.Instance != null)
         {
             BulletZoneController.Instance.EnableShooting();
+            BulletZoneController.Instance.RegenerateBulletInCurrentZone();
         }
     }
 

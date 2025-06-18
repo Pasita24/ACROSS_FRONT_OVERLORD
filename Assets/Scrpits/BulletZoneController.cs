@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using UnityEngine;
 
 public class BulletZoneController : MonoBehaviour
@@ -48,27 +49,27 @@ public class BulletZoneController : MonoBehaviour
 
     public void OnPlayerEnterZone(string zone)
     {
-        // Solo disparar si el shooting está explícitamente habilitado
-        if (!shootingEnabled || !BossController.Instance.IsShootingEnabled) return;
-
-        if (currentBullet != null)
+        // Verificar doble condición de disparo permitido
+        if (!shootingEnabled || !BossController.Instance.IsShootingEnabled)
         {
-            Destroy(currentBullet); // Destruye el disparo anterior si existe
+            // Limpiar bala existente si las condiciones no se cumplen
+            if (currentBullet != null)
+            {
+                Destroy(currentBullet);
+                currentBullet = null;
+            }
+            return;
         }
 
-        if (zone == "Zone1")
+        // Generar nueva bala solo si no existe una actual
+        if (currentBullet == null)
         {
-            currentZone = "Zone1";
-            currentBullet = Instantiate(bulletPrefab, new Vector3(spawnPointZone1.position.x, spawnPointZone1.position.y, 0), Quaternion.identity);
+            Transform spawnPoint = zone == "Zone1" ? spawnPointZone1 : spawnPointZone2;
+            Vector3 spawnPosition = new Vector3(spawnPoint.position.x, spawnPoint.position.y, 0); // Forzar Z=0
+            currentBullet = Instantiate(bulletPrefab, spawnPosition, Quaternion.identity);
             SetTrenchReferences(currentBullet);
-            UnityEngine.Debug.Log("Disparo generado en Zona 1");
-        }
-        else if (zone == "Zone2")
-        {
-            currentZone = "Zone2";
-            currentBullet = Instantiate(bulletPrefab, new Vector3(spawnPointZone2.position.x, spawnPointZone2.position.y, 0), Quaternion.identity);
-            SetTrenchReferences(currentBullet);
-            UnityEngine.Debug.Log("Disparo generado en Zona 2");
+            currentZone = zone;
+            UnityEngine.Debug.Log($"Disparo generado en {zone}");
         }
     }
 
@@ -95,6 +96,13 @@ public class BulletZoneController : MonoBehaviour
             movement.trench1Right = trench1Right;
             movement.trench2Left = trench2Left;
             movement.trench2Right = trench2Right;
+        }
+    }
+    public void RegenerateBulletInCurrentZone()
+    {
+        if (!string.IsNullOrEmpty(currentZone))
+        {
+            OnPlayerEnterZone(currentZone); // Reutilizamos el método existente
         }
     }
 }
