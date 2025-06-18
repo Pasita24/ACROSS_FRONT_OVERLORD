@@ -9,6 +9,10 @@ TagManager:
   - limEnemy
   - Zone1
   - Zone2
+  - granada
+  - Granada
+  - balcon
+  - Balcon
   - Gun
   layers:
   - Default
@@ -47,9 +51,9 @@ TagManager:
   - name: fondo
     uniqueID: 2270830791
     locked: 0
-  - name: in game
-    uniqueID: 2244198583
-    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: in game
+    uniqueID: 2244198583
     locked: 0
