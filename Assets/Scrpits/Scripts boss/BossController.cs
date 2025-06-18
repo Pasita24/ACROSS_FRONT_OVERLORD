@@ -3,24 +3,37 @@ using HeneGames.DialogueSystem;
 
 public class BossController : MonoBehaviour
 {
-    private enum BossState { Patrol, Idle, MovingRight, MachineGun }
+    private enum BossState { Patrol, Idle, MovingRight, MachineGun, Resting }
 
     [Header("Patrol Settings")]
-    [SerializeField] private float moveSpeed = 3f; // Velocidad de patrulla
-    [SerializeField] private float patrolDistance = 5f; // Distancia de patrulla
-    [SerializeField] private LayerMask groundLayer; // Capa del suelo
+    [SerializeField] private float moveSpeed = 3f;
+    [SerializeField] private float patrolDistance = 5f;
+    [SerializeField] private LayerMask groundLayer;
 
     [Header("Ground Check")]
-    [SerializeField] private Transform groundCheck; // Punto de verificación del suelo
-    [SerializeField] private float groundCheckRadius = 0.2f; // Radio de verificación
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private float groundCheckRadius = 0.2f;
 
     [Header("Dialogue Settings")]
-    [SerializeField] private DialogueUI dialogueUI; // Referencia al DialogueUI
-    [SerializeField] private float moveSpeedRight = 2f; // Velocidad constante para moverse a la derecha
+    [SerializeField] private DialogueUI dialogueUI;
+    [SerializeField] private float moveSpeedRight = 2f;
 
     [Header("Machine Gun Settings")]
-    [SerializeField] private Camera bossCamera; // Cámara para mostrar al boss
-    [SerializeField] private Transform punto1; // Punto de aparición del boss
+    [SerializeField] private Camera bossCamera;
+    [SerializeField] private Transform punto1;
+    [SerializeField] private ParticleSystem shootingParticle; // Añadido
+
+    [Header("Fatiga Settings")]
+    [SerializeField] private float shootingDuration = 10f;
+    [SerializeField] private float restDuration = 5f;
+    [SerializeField] private GameObject weaponObject; // Objeto con Animator
+    [SerializeField] private string shootingAnimParam = "IsShooting";
+
+    private float shootingTimer;
+    private float restTimer;
+    private bool isShootingEnabled;
+    public bool IsShootingEnabled => isShootingEnabled;
+    private Animator weaponAnimator;
 
     private Rigidbody2D rb;
     private Vector2 startPosition;
@@ -32,14 +45,33 @@ public class BossController : MonoBehaviour
     private Vector2 moveTargetPosition;
     private float moveDistance;
 
+
+    public static BossController Instance { get; private set; }
+
+    void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         startPosition = transform.position;
         if (dialogueUI != null)
         {
-            originalActionInput = dialogueUI.actionInput; // Guardar la tecla original
+            originalActionInput = dialogueUI.actionInput;
         }
+        if (weaponObject != null)
+        {
+            weaponAnimator = weaponObject.GetComponent<Animator>();
+        }
+        shootingTimer = shootingDuration;
     }
 
     void Update()
@@ -47,23 +79,45 @@ public class BossController : MonoBehaviour
         // Verificar si está en el suelo
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
 
+        // Manejar fatiga solo en estado MachineGun
+        if (currentState == BossState.MachineGun)
+        {
+            if (isShootingEnabled)
+            {
+                shootingTimer -= Time.deltaTime;
+                if (shootingTimer <= 0f)
+                {
+                    StartResting();
+                }
+            }
+            else
+            {
+                restTimer -= Time.deltaTime;
+                if (restTimer <= 0f)
+                {
+                    ResumeShooting();
+                }
+            }
+        }
+
+
         // Manejar el estado actual
         switch (currentState)
         {
             case BossState.Patrol:
-                if (isGrounded)
-                {
-                    Patrol();
-                }
+                if (isGrounded) Patrol();
                 break;
             case BossState.Idle:
-                rb.velocity = Vector2.zero; // Detener movimiento
+                rb.velocity = Vector2.zero;
                 break;
             case BossState.MovingRight:
                 UpdateMoveRight();
                 break;
             case BossState.MachineGun:
                 UpdateMachineGun();
+                break;
+            case BossState.Resting:
+                // Estado de descanso (no hace nada especial)
                 break;
         }
     }
@@ -93,6 +147,63 @@ public class BossController : MonoBehaviour
         Vector3 localScale = transform.localScale;
         localScale.x *= -1;
         transform.localScale = localScale;
+    }
+
+    private void StartResting()
+    {
+        isShootingEnabled = false;
+        restTimer = restDuration;
+
+        // Desactivar el weaponObject
+        if (weaponObject != null)
+        {
+            weaponObject.SetActive(false);
+        }
+
+        // Detener la partícula de disparo si existe
+        if (shootingParticle != null)
+        {
+            shootingParticle.Stop();
+        }
+
+        // Desactivar disparos
+        if (BulletZoneController.Instance != null)
+        {
+            BulletZoneController.Instance.DisableShooting();
+        }
+    }
+
+    private void ResumeShooting()
+    {
+        isShootingEnabled = true;
+        shootingTimer = shootingDuration;
+
+        // Reactivar el weaponObject
+        if (weaponObject != null)
+        {
+            weaponObject.SetActive(true);
+        }
+
+        // Iniciar la partícula de disparo si existe
+        if (shootingParticle != null)
+        {
+            shootingParticle.Play();
+        }
+
+        // CAMBIO PRINCIPAL: Reactivar los disparos automáticamente junto con el weaponObject
+        if (BulletZoneController.Instance != null)
+        {
+            BulletZoneController.Instance.EnableShooting();
+        }
+    }
+
+    // Método opcional para casos especiales (mantenemos por compatibilidad)
+    public void EnableShootingManually()
+    {
+        if (BulletZoneController.Instance != null)
+        {
+            BulletZoneController.Instance.EnableShooting();
+        }
     }
 
     public void StopMovement()

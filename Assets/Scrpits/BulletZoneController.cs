@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class BulletZoneController : MonoBehaviour
 {
+    public static BulletZoneController Instance { get; private set; }
     [Header("Prefab del disparo")]
     [SerializeField] private GameObject bulletPrefab;
 
@@ -17,9 +18,39 @@ public class BulletZoneController : MonoBehaviour
 
     private GameObject currentBullet;
     private string currentZone = "";
+    private bool shootingEnabled = true;
+    void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
+    public void DisableShooting()
+    {
+        shootingEnabled = false;
+        if (currentBullet != null)
+        {
+            Destroy(currentBullet);
+            currentBullet = null;
+        }
+    }
+
+    public void EnableShooting()
+    {
+        shootingEnabled = true;
+    }
+
 
     public void OnPlayerEnterZone(string zone)
     {
+        // Solo disparar si el shooting está explícitamente habilitado
+        if (!shootingEnabled || !BossController.Instance.IsShootingEnabled) return;
+
         if (currentBullet != null)
         {
             Destroy(currentBullet); // Destruye el disparo anterior si existe
