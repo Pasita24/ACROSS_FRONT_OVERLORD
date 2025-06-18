@@ -61,4 +61,13 @@ public class Granada : MonoBehaviour
     {
         _isFrozen = false; // Reanuda el timer en Update()
     }
+    // Explota la granada inmediatamente, ignorando timer y estado frozen
+    public void ForceExplosion()
+    {
+        if (_isBeingDestroyed) return; // Evita múltiples llamadas
+
+        _currentTimer = 0f; // Fuerza el timer a 0
+        _isFrozen = false;  // Asegura que no esté congelada
+        Explode();          // Llama a la explosión
+    }
 }

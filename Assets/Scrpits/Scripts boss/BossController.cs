@@ -29,6 +29,11 @@ public class BossController : MonoBehaviour
     [SerializeField] private GameObject weaponObject; // Objeto con Animator
     [SerializeField] private string shootingAnimParam = "IsShooting";
 
+    [Header("Movement to Point B")]
+    [SerializeField] private Transform pointB; // Asigna el punto B en el Inspector
+    [SerializeField] private float moveToPointSpeed = 2f;
+    private bool isMovingToPointB = false;
+
     private float shootingTimer;
     private float restTimer;
     private bool isShootingEnabled;
@@ -120,8 +125,12 @@ public class BossController : MonoBehaviour
                 // Estado de descanso (no hace nada especial)
                 break;
         }
+        if (isMovingToPointB)
+        {
+            MoveTowardsPointB();
+        }
     }
-
+    
     void Patrol()
     {
         // Mover en la dirección actual
@@ -287,6 +296,38 @@ public class BossController : MonoBehaviour
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+        }
+    }
+    public void MoveToPointBAndDisable()
+    {
+        if (pointB == null) return;
+
+        ChangeState(BossState.Idle);
+        isMovingToPointB = true;
+        LockDialogueInput();
+
+        // Asegurar que el Rigidbody del boss no interfiera
+        if (rb != null)
+        {
+            rb.velocity = Vector2.zero;
+            rb.isKinematic = true; // Solo si el boss NO debe ser afectado por físicas
+        }
+    }
+    private void MoveTowardsPointB()
+    {
+        // Mover usando Transform (evita Rigidbody)
+        transform.position = Vector2.MoveTowards(
+            transform.position,
+            pointB.position,
+            moveToPointSpeed * Time.deltaTime
+        );
+
+        if (Vector2.Distance(transform.position, pointB.position) <= 0.1f)
+        {
+            isMovingToPointB = false;
+            rb.isKinematic = false; // Restaurar si es necesario
+            gameObject.SetActive(false);
+            UnlockDialogueInput();
         }
     }
 }
