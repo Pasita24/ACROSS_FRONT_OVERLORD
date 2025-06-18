@@ -8,11 +8,14 @@ public class movimientoPlataforma : MonoBehaviour
     [SerializeField] private Transform controladorSuelo;
     [SerializeField] private float distancia;
     [SerializeField] private bool moviendoDerecha;
+
     private Rigidbody2D rb;
+    private Animator animator;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
 
     private void FixedUpdate()
@@ -24,6 +27,12 @@ public class movimientoPlataforma : MonoBehaviour
         if (informacionSuelo == false)
         {
             Girar();
+        }
+
+        // Animación basada en velocidad horizontal
+        if (animator != null)
+        {
+            animator.SetBool("Moviendo", Mathf.Abs(rb.velocity.x) > 0.01f);
         }
     }
 
@@ -37,6 +46,6 @@ public class movimientoPlataforma : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(controladorSuelo.transform.position, controladorSuelo.transform.position + Vector3.down * distancia);
+        Gizmos.DrawLine(controladorSuelo.position, controladorSuelo.position + Vector3.down * distancia);
     }
 }
