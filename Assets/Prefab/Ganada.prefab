@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 6616899346262340365}
   - component: {fileID: -1437365837457924466}
   - component: {fileID: 2019505979065066274}
+  - component: {fileID: -1220634838034440710}
   m_Layer: 0
   m_Name: Ganada
-  m_TagString: Untagged
+  m_TagString: Granada
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -73,8 +74,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -2050768713
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 085d5ff4e08d7b648ae3a9c4a2f76711, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -99,7 +100,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ec4da3df20448f4594d6ce106865c15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosionTime: 3
+  _explosionTime: 5
+  _onTriggerEnterEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  _onExplodeEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  _currentTimer: 0
+  _isFrozen: 1
 --- !u!50 &-1437365837457924466
 Rigidbody2D:
   serializedVersion: 4
@@ -172,3 +181,24 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.2, y: 1.2}
   m_EdgeRadius: 0
+--- !u!114 &-1220634838034440710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9122149924751592938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9da6c51194ab84042bc718fd8ead8aa6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startDialogueEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  nextSentenceDialogueEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  endDialogueEvent:
+    m_PersistentCalls:
+      m_Calls: []

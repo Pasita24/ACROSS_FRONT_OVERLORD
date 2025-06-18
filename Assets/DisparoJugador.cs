@@ -9,12 +9,13 @@ public class DisparoJugador : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown("Fire1") && !LanzadorDeGranadas.EstaApuntandoConGranada)
         {
             Disparar();
         }
     }
-    
+
+
     private void Disparar(){
         Instantiate(bala, controladorDisparo.position, controladorDisparo.rotation);
     }
