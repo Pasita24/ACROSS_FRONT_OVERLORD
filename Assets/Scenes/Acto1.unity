@@ -352,7 +352,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.6784314, g: 0, b: 0.21546744, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -805,8 +805,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: muevete con las flechas y escondete detras de los muros para ocultarte
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: f157c6b61f2d7544d97666c4e4115322, type: 2}
-  m_sharedMaterial: {fileID: 1590617150101561768, guid: f157c6b61f2d7544d97666c4e4115322, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 0161d805a3764c089bef00bfe00793f5, type: 2}
+  m_sharedMaterial: {fileID: 2147374, guid: 0161d805a3764c089bef00bfe00793f5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -837,7 +837,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 16
+  m_HorizontalAlignment: 8
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -1080,15 +1080,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: "(mantente fuera del rango de vision de la luz, si te atrapa est\xE1s muerto)"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: f157c6b61f2d7544d97666c4e4115322, type: 2}
-  m_sharedMaterial: {fileID: 1590617150101561768, guid: f157c6b61f2d7544d97666c4e4115322, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 0161d805a3764c089bef00bfe00793f5, type: 2}
+  m_sharedMaterial: {fileID: 2147374, guid: 0161d805a3764c089bef00bfe00793f5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278914047
-  m_fontColor: {r: 1, g: 0.042452812, b: 0.042452812, a: 1}
+    rgba: 4281794733
+  m_fontColor: {r: 0.6784314, g: 0, b: 0.21546744, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1112,7 +1112,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 16
+  m_HorizontalAlignment: 8
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -1189,7 +1189,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -185, y: -18.09999}
+  m_AnchoredPosition: {x: -185, y: -7}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1908862241
@@ -1212,7 +1212,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'ACTO 1: sigilo'
+  m_text: 'Acto 1 : Sigilo'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f157c6b61f2d7544d97666c4e4115322, type: 2}
   m_sharedMaterial: {fileID: 1590617150101561768, guid: f157c6b61f2d7544d97666c4e4115322, type: 2}

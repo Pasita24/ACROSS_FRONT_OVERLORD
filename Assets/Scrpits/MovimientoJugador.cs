@@ -14,7 +14,7 @@ public class MovimientoJugador : MonoBehaviour
     [SerializeField] private TextMeshProUGUI textoVida;
     
     [Header("Vida")]
-    [SerializeField] private float vida;
+    [SerializeField] public float vida;
     [SerializeField] private GameObject efectoMuerte;
 
     [Header("Movimiento")]
@@ -165,13 +165,14 @@ public class MovimientoJugador : MonoBehaviour
         ActualizarTextoVida();
         if (vida <= 0)
         {
-            Muerte();
             MuerteJugador?.Invoke(this, EventArgs.Empty);
+            Muerte();
+            
         }
     }
     private void ActualizarTextoVida()
     {
-        textoVida.text = "Vida: " + Mathf.Max(vida, 0).ToString("0");
+        textoVida.text = "Vidas: " + Mathf.Max(vida, 0).ToString("0");
     }
 
     private void Muerte()
