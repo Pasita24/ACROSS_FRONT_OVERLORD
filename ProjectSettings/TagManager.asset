@@ -9,6 +9,7 @@ TagManager:
   - limEnemy
   - Zone1
   - Zone2
+  - Gun
   layers:
   - Default
   - TransparentFX
