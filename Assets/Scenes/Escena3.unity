@@ -2838,7 +2838,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1060118185}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4e5f9c2008c9a64980b0e0cd242c4c0, type: 3}
   m_Name: 
@@ -2903,8 +2903,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textoVida: {fileID: 980445934}
-  vida: 0
-  efectoMuerte: {fileID: 0}
+  vida: 3
+  efectoMuerte: {fileID: 1014282450971576033, guid: 12d7ec2d0ee2b1b43971cfacf9714e63, type: 3}
   velocidadDeMovimiento: 200
   suavizadoDeMovimiento: 0
   fuerzaDeSalto: 450
@@ -17980,6 +17980,11 @@ MonoBehaviour:
   moveSpeedRight: 4
   bossCamera: {fileID: 1270192512}
   punto1: {fileID: 1931400409}
+  shootingParticle: {fileID: 0}
+  shootingDuration: 10
+  restDuration: 5
+  weaponObject: {fileID: 20227929}
+  shootingAnimParam: IsShooting
 --- !u!224 &1945113864 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6449296285829880521, guid: 66a0aba2ba55058439c92574558222ac, type: 3}
