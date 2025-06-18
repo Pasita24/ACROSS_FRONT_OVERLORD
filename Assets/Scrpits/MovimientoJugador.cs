@@ -26,9 +26,13 @@ public class MovimientoJugador : MonoBehaviour
     [SerializeField] private bool enSuelo;
     private bool salto = false;
 
+    [Header("Animacion")]
+    private Animator animator;
+
     private void Start()
     {
         rb2D = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
 
     private void Update()
@@ -36,6 +40,7 @@ public class MovimientoJugador : MonoBehaviour
         if (movimientoPausado) return;
 
         movimientoHorizontal = Input.GetAxisRaw("Horizontal") * velocidadDeMovimiento;
+        animator.SetFloat("Horizontal", Mathf.Abs(movimientoHorizontal));
 
         if (Input.GetButtonDown("Jump"))
         {
