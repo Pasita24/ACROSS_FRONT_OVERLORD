@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -40,6 +41,7 @@ public class MovimientoJugador : MonoBehaviour
     private BoxCollider2D boxCollider2D;
     private float gravedadInicial;
     private bool escalando;
+    public event EventHandler MuerteJugador;
 
     private void Start()
     {
@@ -164,6 +166,7 @@ public class MovimientoJugador : MonoBehaviour
         if (vida <= 0)
         {
             Muerte();
+            MuerteJugador?.Invoke(this, EventArgs.Empty);
         }
     }
     private void ActualizarTextoVida()
