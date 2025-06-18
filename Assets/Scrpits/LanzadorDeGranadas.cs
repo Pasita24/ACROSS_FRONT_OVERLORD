@@ -65,6 +65,13 @@ public class LanzadorDeGranadas : MonoBehaviour
         GameObject granada = Instantiate(prefabGranada, puntoLanzamiento.position, Quaternion.identity);
         Rigidbody2D rb = granada.GetComponent<Rigidbody2D>();
         rb.velocity = CalcularDireccionLanzamiento() * fuerzaLanzamiento;
+
+        // Asegurarse de que la granada no esté congelada al lanzarla
+        Granada granadaScript = granada.GetComponent<Granada>();
+        if (granadaScript != null)
+        {
+            granadaScript.UnfreezeTimer();
+        }
     }
 
     private void MostrarTrayectoria()

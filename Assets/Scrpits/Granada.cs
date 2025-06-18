@@ -17,6 +17,8 @@ public class Granada : MonoBehaviour
     private void Start()
     {
         _currentTimer = _explosionTime; // Inicializa el timer
+        _isFrozen = false; // Asegura que no empiece congelada
+        _isBeingDestroyed = false; // Asegura el estado inicial
     }
 
     private void Update()
@@ -36,6 +38,7 @@ public class Granada : MonoBehaviour
         if (collision.CompareTag("Balcon"))
         {
             _onTriggerEnterEvent?.Invoke(); // Activa el evento (para iniciar diálogo)
+            FreezeTimer(); // Congela la granada inmediatamente
         }
     }
 
