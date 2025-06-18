@@ -303,15 +303,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: Click izquierdo para apuntar y Click derecho para disparar la granada
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: f157c6b61f2d7544d97666c4e4115322, type: 2}
-  m_sharedMaterial: {fileID: 1590617150101561768, guid: f157c6b61f2d7544d97666c4e4115322, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 0161d805a3764c089bef00bfe00793f5, type: 2}
+  m_sharedMaterial: {fileID: 2147374, guid: 0161d805a3764c089bef00bfe00793f5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190325
-  m_fontColor: {r: 0.9607844, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -486,7 +486,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.6784314, g: 0, b: 0.21546744, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1081,15 +1081,15 @@ MonoBehaviour:
   m_text: (te han descubierto, pero tendras la oportunidad de vegarte de el en una
     batalla)
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: f157c6b61f2d7544d97666c4e4115322, type: 2}
-  m_sharedMaterial: {fileID: 1590617150101561768, guid: f157c6b61f2d7544d97666c4e4115322, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 0161d805a3764c089bef00bfe00793f5, type: 2}
+  m_sharedMaterial: {fileID: 2147374, guid: 0161d805a3764c089bef00bfe00793f5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278914047
-  m_fontColor: {r: 1, g: 0.042452812, b: 0.042452812, a: 1}
+    rgba: 4281794733
+  m_fontColor: {r: 0.6784314, g: 0, b: 0.21546744, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1113,7 +1113,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 16
+  m_HorizontalAlignment: 8
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -1213,7 +1213,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'ACTO 3: pelea'
+  m_text: 'Acto 3: Pelea'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f157c6b61f2d7544d97666c4e4115322, type: 2}
   m_sharedMaterial: {fileID: 1590617150101561768, guid: f157c6b61f2d7544d97666c4e4115322, type: 2}
@@ -1222,8 +1222,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190325
-  m_fontColor: {r: 0.9607844, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
