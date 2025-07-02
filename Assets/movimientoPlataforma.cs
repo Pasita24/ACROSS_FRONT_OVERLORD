@@ -11,6 +11,7 @@ public class movimientoPlataforma : MonoBehaviour
 
     private Rigidbody2D rb;
     private Animator animator;
+    [SerializeField] private float dañoAlJugador = 1f; // Cantidad de daño al colisionar
 
     private void Start()
     {
@@ -29,7 +30,6 @@ public class movimientoPlataforma : MonoBehaviour
             Girar();
         }
 
-        // Animación basada en velocidad horizontal
         if (animator != null)
         {
             animator.SetBool("Moviendo", Mathf.Abs(rb.velocity.x) > 0.01f);
@@ -41,6 +41,18 @@ public class movimientoPlataforma : MonoBehaviour
         moviendoDerecha = !moviendoDerecha;
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y + 180, 0);
         velocidad *= -1;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            MovimientoJugador jugador = other.GetComponent<MovimientoJugador>();
+            if (jugador != null)
+            {
+                jugador.TomarDaño(dañoAlJugador);
+            }
+        }
     }
 
     private void OnDrawGizmosSelected()
