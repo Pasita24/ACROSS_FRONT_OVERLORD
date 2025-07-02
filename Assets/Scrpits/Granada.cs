@@ -7,6 +7,7 @@ public class Granada : MonoBehaviour
     [SerializeField] private float _explosionTime = 3f; // Tiempo base antes de explotar
     [SerializeField] private UnityEvent _onTriggerEnterEvent; // Evento al tocar el balcón
     [SerializeField] private UnityEvent _onExplodeEvent; // Evento al explotar
+    [SerializeField] private GameObject _explosionPrefab;
 
     [Header("Debug")]
     [SerializeField] private float _currentTimer; // Tiempo restante visible en el Inspector
@@ -46,9 +47,17 @@ public class Granada : MonoBehaviour
     {
         if (_isBeingDestroyed) return;
         _isBeingDestroyed = true;
+
+        // Instanciar la explosión
+        if (_explosionPrefab != null)
+        {
+            Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
+        }
+
         _onExplodeEvent?.Invoke();
         Destroy(gameObject);
     }
+
 
     // Congela el tiempo (llamar desde Unity Event)
     public void FreezeTimer()
