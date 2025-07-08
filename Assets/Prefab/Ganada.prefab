@@ -108,6 +108,11 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   _explosionPrefab: {fileID: 161702451737631826, guid: 78a2c8343e7f7fc429eb55b2b0a22efc, type: 3}
+  _radioExplosion: 3
+  "_da\xF1oExplosion": 1
+  _layerJugador:
+    serializedVersion: 2
+    m_Bits: 256
   _currentTimer: 0
   _isFrozen: 1
 --- !u!50 &-1437365837457924466

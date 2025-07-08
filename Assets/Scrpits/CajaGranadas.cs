@@ -3,7 +3,13 @@ using UnityEngine;
 
 public class CajaGranadas : MonoBehaviour
 {
-    //private bool granadaDisponible = true;
+    // Velocidad de parpadeo (ajustable desde el inspector)
+    public float velocidadParpadeo = 2f;
+
+    // Rango de brillo (también ajustable si lo deseas)
+    public float brilloMinimo = 0.5f;
+    public float brilloMaximo = 1.5f;
+
     private SpriteRenderer spriteRenderer;
     private float tiempo;
 
@@ -18,11 +24,11 @@ public class CajaGranadas : MonoBehaviour
 
     private void Update()
     {
-        // Oscila el brillo del sprite
+        // Oscila el brillo del sprite usando la velocidad configurada
         if (spriteRenderer != null)
         {
             tiempo += Time.deltaTime;
-            float brillo = Mathf.Lerp(0.5f, 1.5f, (Mathf.Sin(tiempo * 2f) + 1f) / 2f);
+            float brillo = Mathf.Lerp(brilloMinimo, brilloMaximo, (Mathf.Sin(tiempo * velocidadParpadeo) + 1f) / 2f);
             spriteRenderer.color = new Color(brillo, brillo, brillo, 1f);
         }
     }
@@ -35,7 +41,6 @@ public class CajaGranadas : MonoBehaviour
         {
             inventario.TomarGranada();
             UnityEngine.Debug.Log("Jugador tomó una granada");
-            // Ya no destruimos el objeto ni lo deshabilitamos
         }
     }
 }

@@ -801,7 +801,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 89742982}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ControladorDisparo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2950,7 +2950,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: Has entregado la carta
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f3b64042bb18f0746a08270ae744e4d5, type: 2}
   m_sharedMaterial: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -3014,7 +3014,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: -263.9701, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &821428963
@@ -3833,6 +3833,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 292c55882de123f47a3e8b742fe48964, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  velocidadParpadeo: 5
+  brilloMinimo: 0.5
+  brilloMaximo: 1.5
 --- !u!212 &982101089
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3894,8 +3897,8 @@ Transform:
   m_GameObject: {fileID: 982101087}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: 0.049876485, w: 0.99875546}
-  m_LocalPosition: {x: -0.75, y: -2.35, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -49.19, y: -1.41, z: 0}
+  m_LocalScale: {x: 0.73484, y: 0.73484, z: 0.73484}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -4386,7 +4389,7 @@ GameObject:
   - component: {fileID: 1060118194}
   - component: {fileID: 1060118195}
   - component: {fileID: 1060118196}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: 'Player '
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -20048,7 +20051,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1804316007}
   - component: {fileID: 1804316008}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ControladorSuelo
   m_TagString: Untagged
   m_Icon: {fileID: 0}

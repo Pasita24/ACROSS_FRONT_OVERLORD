@@ -4,27 +4,32 @@ using UnityEngine.Events;
 public class Granada : MonoBehaviour
 {
     [Header("Configuración")]
-    [SerializeField] private float _explosionTime = 3f; // Tiempo base antes de explotar
-    [SerializeField] private UnityEvent _onTriggerEnterEvent; // Evento al tocar el balcón
-    [SerializeField] private UnityEvent _onExplodeEvent; // Evento al explotar
+    [SerializeField] private float _explosionTime = 3f;
+    [SerializeField] private UnityEvent _onTriggerEnterEvent;
+    [SerializeField] private UnityEvent _onExplodeEvent;
     [SerializeField] private GameObject _explosionPrefab;
 
+    [Header("Explosión")]
+    [SerializeField] private float _radioExplosion = 3f; // Radio del área de daño
+    [SerializeField] private float _dañoFijo = 1f; // Daño constante al jugador
+    [SerializeField] private LayerMask _layerJugador; // Capa del jugador
+
     [Header("Debug")]
-    [SerializeField] private float _currentTimer; // Tiempo restante visible en el Inspector
-    [SerializeField] private bool _isFrozen; // Estado de congelación
+    [SerializeField] private float _currentTimer;
+    [SerializeField] private bool _isFrozen;
 
     private bool _isBeingDestroyed = false;
 
     private void Start()
     {
-        _currentTimer = _explosionTime; // Inicializa el timer
-        _isFrozen = false; // Asegura que no empiece congelada
-        _isBeingDestroyed = false; // Asegura el estado inicial
+        _currentTimer = _explosionTime;
+        _isFrozen = false;
+        _isBeingDestroyed = false;
     }
 
     private void Update()
     {
-        if (_isFrozen) return; // Si está congelada, no cuenta tiempo
+        if (_isFrozen) return;
 
         _currentTimer -= Time.deltaTime;
 
@@ -38,8 +43,8 @@ public class Granada : MonoBehaviour
     {
         if (collision.CompareTag("Balcon"))
         {
-            _onTriggerEnterEvent?.Invoke(); // Activa el evento (para iniciar diálogo)
-            FreezeTimer(); // Congela la granada inmediatamente
+            _onTriggerEnterEvent?.Invoke();
+            FreezeTimer();
         }
     }
 
@@ -54,29 +59,41 @@ public class Granada : MonoBehaviour
             Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
         }
 
+        // Aplicar daño fijo en área
+        AplicarDañoFijo();
+
         _onExplodeEvent?.Invoke();
         Destroy(gameObject);
     }
 
-
-    // Congela el tiempo (llamar desde Unity Event)
-    public void FreezeTimer()
+    private void AplicarDañoFijo()
     {
-        _isFrozen = true; // Detiene el timer en Update()
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, _radioExplosion, _layerJugador);
+
+        foreach (Collider2D collider in colliders)
+        {
+            MovimientoJugador jugador = collider.GetComponent<MovimientoJugador>();
+            if (jugador != null)
+            {
+                jugador.TomarDaño(_dañoFijo); // Daño constante
+            }
+        }
     }
 
-    // Descongela el tiempo (llamar desde Unity Event)
-    public void UnfreezeTimer()
-    {
-        _isFrozen = false; // Reanuda el timer en Update()
-    }
-    // Explota la granada inmediatamente, ignorando timer y estado frozen
+    public void FreezeTimer() => _isFrozen = true;
+    public void UnfreezeTimer() => _isFrozen = false;
+
     public void ForceExplosion()
     {
-        if (_isBeingDestroyed) return; // Evita múltiples llamadas
+        if (_isBeingDestroyed) return;
+        _currentTimer = 0f;
+        _isFrozen = false;
+        Explode();
+    }
 
-        _currentTimer = 0f; // Fuerza el timer a 0
-        _isFrozen = false;  // Asegura que no esté congelada
-        Explode();          // Llama a la explosión
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, _radioExplosion);
     }
 }
