@@ -14,10 +14,19 @@ public class Bala : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        Debug.Log("Colisionó con: " + other.gameObject.name);
+
         if (other.CompareTag("Enemigo"))
         {
             other.GetComponent<Enemigo>().TomarDaño(daño);
             Destroy(gameObject);
         }
+
+        if (other.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
+            Debug.Log("¡Bala tocó el suelo!");
+            Destroy(gameObject);
+        }
     }
+
 }

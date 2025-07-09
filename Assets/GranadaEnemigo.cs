@@ -27,7 +27,7 @@ public class GranadaEnemigo : MonoBehaviour
             // Destruir la granada
             Destroy(gameObject);
         }
-        if (other.CompareTag("Ground"))
+        if (other.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
             // Instanciar efecto de explosión
             if (efectoExplosion != null)
