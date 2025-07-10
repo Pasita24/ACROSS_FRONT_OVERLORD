@@ -27,6 +27,12 @@ public class Bala : MonoBehaviour
             Debug.Log("¡Bala tocó el suelo!");
             Destroy(gameObject);
         }
+
+        if (other.CompareTag("Canon"))
+        {
+            other.GetComponent<CanonEnemigo>().TomarDaño(daño);
+            Destroy(gameObject);
+        }
     }
 
 }

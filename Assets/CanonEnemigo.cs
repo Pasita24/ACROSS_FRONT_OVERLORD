@@ -1,61 +1,99 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CanonEnemigo : MonoBehaviour
 {
-    [Header("Detección del Jugador")]
-    [SerializeField] private float radioDeteccion = 8f;
-    [SerializeField] private LayerMask capaJugador;
-
     [Header("Disparo")]
-    [SerializeField] private GameObject proyectilPrefab;
     [SerializeField] private Transform puntoDisparo;
+    [SerializeField] private GameObject balaPrefab;
     [SerializeField] private float tiempoEntreDisparos = 2f;
-    private float temporizador;
+    [SerializeField] private float rangoDeteccion = 10f;
 
-    private Transform jugador;
+    [Header("Vida")]
+    [SerializeField] private float vida = 3f;
+    [SerializeField] private float tiempoFlash = 0.1f;
+
+    [Header("Referencias")]
+    [SerializeField] private LayerMask capaJugador;
+    private Transform objetivoJugador;
+    private Animator animator;
+    private SpriteRenderer spriteRenderer;
+    private bool puedeDisparar = true;
+    private bool estaMuerto = false;
 
     private void Start()
     {
-        jugador = GameObject.FindGameObjectWithTag("Player")?.transform;
-        temporizador = tiempoEntreDisparos;
+        objetivoJugador = GameObject.FindGameObjectWithTag("Player")?.transform;
+        animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void Update()
     {
-        if (jugador == null) return;
+        if (estaMuerto || objetivoJugador == null) return;
 
-        float distancia = Vector2.Distance(transform.position, jugador.position);
+        float distancia = Vector2.Distance(transform.position, objetivoJugador.position);
 
-        if (distancia <= radioDeteccion)
+        if (distancia <= rangoDeteccion && puedeDisparar)
         {
-            temporizador -= Time.deltaTime;
-
-            if (temporizador <= 0f)
-            {
-                Disparar();
-                temporizador = tiempoEntreDisparos;
-            }
+            StartCoroutine(Disparar());
         }
     }
 
-    private void Disparar()
+    private IEnumerator Disparar()
     {
-        // Apuntar hacia el jugador
-        Vector2 direccion = (jugador.position - puntoDisparo.position).normalized;
+        puedeDisparar = false;
 
-        // Instanciar proyectil
-        GameObject bala = Instantiate(proyectilPrefab, puntoDisparo.position, Quaternion.identity);
-        
-        // Enviar dirección al proyectil
-        bala.GetComponent<ProyectilCanon>().EstablecerDireccion(direccion);
+        // Apunta al jugador
+        Vector2 direccion = (objetivoJugador.position - puntoDisparo.position).normalized;
+        GameObject bala = Instantiate(balaPrefab, puntoDisparo.position, Quaternion.identity);
+        bala.GetComponent<Rigidbody2D>().velocity = direccion * 5f; // puedes ajustar velocidad
+
+        yield return new WaitForSeconds(tiempoEntreDisparos);
+        puedeDisparar = true;
+    }
+
+    public void TomarDaño(float daño)
+    {
+        if (estaMuerto) return;
+
+        vida -= daño;
+
+        StartCoroutine(ParpadeoBlanco());
+
+        if (vida <= 0)
+        {
+            estaMuerto = true;
+            Morir();
+        }
+    }
+
+    private IEnumerator ParpadeoBlanco()
+    {
+        spriteRenderer.color = Color.red;
+        yield return new WaitForSeconds(tiempoFlash);
+        spriteRenderer.color = new Color(1f, 1f, 1f, 1f); // Color normal
+    }
+
+    private void Morir()
+    {
+        if (animator != null)
+        {
+            animator.SetTrigger("Morir"); // Debe existir en tu Animator
+        }
+
+        StartCoroutine(DestruirLuego());
+    }
+
+    private IEnumerator DestruirLuego()
+    {
+        yield return new WaitForSeconds(1f); // Tiempo según animación de muerte
+        Destroy(gameObject);
     }
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, radioDeteccion);
+        Gizmos.DrawWireSphere(transform.position, rangoDeteccion);
     }
 }
-
