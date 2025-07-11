@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class MovimientoJugador : MonoBehaviour
 {
@@ -12,7 +10,7 @@ public class MovimientoJugador : MonoBehaviour
 
     [Header("UI Vida")]
     [SerializeField] private TextMeshProUGUI textoVida;
-    
+
     [Header("Vida")]
     [SerializeField] public float vida;
     [SerializeField] private GameObject efectoMuerte;
@@ -33,31 +31,42 @@ public class MovimientoJugador : MonoBehaviour
     [SerializeField] private bool enSuelo;
     private bool salto = false;
 
-    [Header("Animacion")]
+    [Header("Animación")]
     private Animator animator;
 
-    [Header("Escalar")]
-    [SerializeField] private float velocidadEscalar;
-    private BoxCollider2D boxCollider2D;
-    private float gravedadInicial;
-    private bool escalando;
+    [Header("Dash")]
+    [SerializeField] private float fuerzaDash = 15f;
+    [SerializeField] private float duracionDash = 0.2f;
+    [SerializeField] private float tiempoEntreDashes = 1f;
+    private bool puedeHacerDash = true;
+    private bool estaHaciendoDash = false;
+    private float tiempoDashRestante = 0f;
+    private float direccionDash = 1f;
+
+    private BoxCollider2D boxCollider;
+    private Vector2 colliderOriginalSize;
+    private Vector2 colliderOriginalOffset;
+    [SerializeField] private Vector2 colliderDashSize = new Vector2(1.5f, 0.5f);
+    [SerializeField] private Vector2 colliderDashOffset = new Vector2(0f, -0.25f);
+
     public event EventHandler MuerteJugador;
 
     private void Start()
     {
         rb2D = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        boxCollider2D = GetComponent<BoxCollider2D>();
-        gravedadInicial = rb2D.gravityScale;
         ActualizarTextoVida();
+        boxCollider = GetComponent<BoxCollider2D>();
+        colliderOriginalSize = boxCollider.size;
+        colliderOriginalOffset = boxCollider.offset;
     }
 
     private void Update()
     {
+        if (movimientoPausado) return;
+
         input.x = Input.GetAxisRaw("Horizontal");
         input.y = Input.GetAxisRaw("Vertical");
-
-        if (movimientoPausado) return;
 
         movimientoHorizontal = input.x * velocidadDeMovimiento;
         animator.SetFloat("Horizontal", Mathf.Abs(movimientoHorizontal));
@@ -66,29 +75,44 @@ public class MovimientoJugador : MonoBehaviour
         {
             salto = true;
         }
+
+        if (Input.GetKeyDown(KeyCode.E) && puedeHacerDash && !estaHaciendoDash)
+        {
+            IniciarDash();
+        }
     }
 
     private void FixedUpdate()
     {
-        if (movimientoPausado)
+        if (movimientoPausado) return;
+
+        // Dash activo
+        if (estaHaciendoDash)
         {
-            rb2D.velocity = new Vector2(0f, rb2D.velocity.y); // Mantener velocidad vertical para gravedad
-            return;
+            rb2D.velocity = new Vector2(direccionDash * fuerzaDash, 0f);
+            tiempoDashRestante -= Time.fixedDeltaTime;
+
+            if (tiempoDashRestante <= 0f)
+            {
+                estaHaciendoDash = false;
+            }
+
+            return; // Ignora movimiento normal mientras dura el dash
         }
 
         enSuelo = Physics2D.OverlapBox(controladorSuelo.position, dimensionesCaja, 0f, queEsSuelo);
-
         Mover(movimientoHorizontal * Time.fixedDeltaTime, salto);
-
-        Escalar();
-
         salto = false;
+        
+        if (tiempoDashRestante <= 0f)
+        {
+            estaHaciendoDash = false;
+            TerminarDash();
+        }
     }
 
     private void Mover(float mover, bool saltar)
     {
-        if (movimientoPausado) return;
-
         Vector3 velocidadObjetivo = new Vector2(mover, rb2D.velocity.y);
         rb2D.velocity = Vector3.SmoothDamp(rb2D.velocity, velocidadObjetivo, ref velocidad, suavizadoDeMovimiento);
 
@@ -114,62 +138,55 @@ public class MovimientoJugador : MonoBehaviour
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y + 180, 0);
     }
 
-    private void Escalar()
+    private void IniciarDash()
     {
-        if ((input.y != 0 || escalando) && (boxCollider2D.IsTouchingLayers(LayerMask.GetMask("Escaleras"))))
-        {
-            Vector2 velocidadSubida = new Vector2(rb2D.velocity.x, input.y * velocidadEscalar);
-            rb2D.velocity = velocidadSubida;
-            rb2D.gravityScale = 0;
-            escalando = true;
+        estaHaciendoDash = true;
+        puedeHacerDash = false;
+        tiempoDashRestante = duracionDash;
 
-        }
-        else
-        {
-            rb2D.gravityScale = gravedadInicial;
-            escalando = false;
-        }
-        if (enSuelo)
-        {
-            escalando = false;
-        }
+        direccionDash = mirandoDerecha ? 1f : -1f;
+
+        animator.SetTrigger("Dash");
+
+        // Ajustar tamaño del collider
+        boxCollider.size = colliderDashSize;
+
+        // Ajustar offset para que la base del collider quede igual
+        float deltaOffsetY = (colliderOriginalSize.y - colliderDashSize.y) / 2f;
+        boxCollider.offset = new Vector2(colliderOriginalOffset.x, colliderOriginalOffset.y - deltaOffsetY);
+
+        Invoke(nameof(HabilitarDash), tiempoEntreDashes);
     }
+
+    private void TerminarDash()
+    {
+        boxCollider.size = colliderOriginalSize;
+        boxCollider.offset = colliderOriginalOffset;
+    }
+
+    private void HabilitarDash()
+    {
+        puedeHacerDash = true;
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireCube(controladorSuelo.position, dimensionesCaja);
     }
 
-    public void PausarMovimiento()
-    {
-        movimientoPausado = true;
-        rb2D.velocity = new Vector2(0f, rb2D.velocity.y); // Mantener velocidad vertical para gravedad
-    }
-
-    public void HabilitarMovimiento()
-    {
-        movimientoPausado = false;
-    }
-
-    public void OnDetected()
-    {
-        movimientoPausado = true;
-        rb2D.velocity = Vector2.zero;
-        rb2D.isKinematic = true;
-
-        GetComponent<SpriteRenderer>().color = Color.red;
-    }
     public void TomarDaño(float daño)
     {
         vida -= daño;
         ActualizarTextoVida();
+
         if (vida <= 0)
         {
             MuerteJugador?.Invoke(this, EventArgs.Empty);
             Muerte();
-            
         }
     }
+
     private void ActualizarTextoVida()
     {
         textoVida.text = "Vidas: " + Mathf.Max(vida, 0).ToString("0");
@@ -180,5 +197,10 @@ public class MovimientoJugador : MonoBehaviour
         Instantiate(efectoMuerte, transform.position, Quaternion.identity);
         Destroy(gameObject);
     }
-
+    
+    public void PausarMovimiento()
+    {
+        movimientoPausado = true;
+        rb2D.velocity = new Vector2(0f, rb2D.velocity.y);
+    }
 }
