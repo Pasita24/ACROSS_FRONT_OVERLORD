@@ -8,22 +8,20 @@ public class EnemyPatrol : MonoBehaviour
     [SerializeField] private float patrolSpeed = 3f; // Velocidad de patrulla
     [SerializeField] private Transform[] patrolPoints; // Puntos entre los que patrulla
     [SerializeField] private float waitTime = 1f; // Tiempo de espera en cada punto
-    [SerializeField] private LayerMask playerLayer; // Layer del jugador para detecci�n
-    [SerializeField] private float detectionRange = 3f; // Rango de detecci�n del jugador
-    [SerializeField] private LayerMask obstacleLayer; // Layer de los muros/obst�culos
+    [SerializeField] private LayerMask playerLayer; // Layer del jugador para detección
+    [SerializeField] private float detectionRange = 3f; // Rango de detección del jugador
+    [SerializeField] private LayerMask obstacleLayer; // Layer de los muros/obstáculos
 
     private int currentPatrolPointIndex;
     private float currentWaitTime;
     private bool movingRight = true; // Para saber si se mueve a la derecha o izquierda
     private Transform playerTransform; // Referencia al transform del jugador
 
-
-
     void Start()
     {
         currentPatrolPointIndex = 0;
         currentWaitTime = waitTime;
-        playerTransform = FindObjectOfType<PlayerController>().transform; // Encuentra al jugador
+        playerTransform = FindObjectOfType<MovimientoJugador>().transform; // Encuentra al jugador
     }
 
     void Update()
@@ -34,16 +32,18 @@ public class EnemyPatrol : MonoBehaviour
 
     void PatrolMovement()
     {
-        // Mover hacia el punto de patrulla actual
+        if (patrolPoints == null || patrolPoints.Length == 0)
+        {
+            return; // No hay puntos de patrulla, el enemigo permanece estático
+        }
+
         transform.position = Vector2.MoveTowards(transform.position, patrolPoints[currentPatrolPointIndex].position, patrolSpeed * Time.deltaTime);
 
-        // Si ha llegado al punto de patrulla
         if (Vector2.Distance(transform.position, patrolPoints[currentPatrolPointIndex].position) < 0.1f)
         {
             if (currentWaitTime <= 0)
             {
-                currentPatrolPointIndex = (currentPatrolPointIndex + 1) % patrolPoints.Length; // Siguiente punto
-                // Determinar la direcci�n de movimiento para la rotaci�n (si tu sprite rota)
+                currentPatrolPointIndex = (currentPatrolPointIndex + 1) % patrolPoints.Length;
                 if (patrolPoints[currentPatrolPointIndex].position.x > transform.position.x)
                 {
                     movingRight = true;
@@ -52,67 +52,74 @@ public class EnemyPatrol : MonoBehaviour
                 {
                     movingRight = false;
                 }
-                currentWaitTime = waitTime; // Reiniciar tiempo de espera
+                currentWaitTime = waitTime;
             }
             else
             {
-                currentWaitTime -= Time.deltaTime; // Esperar
+                currentWaitTime -= Time.deltaTime;
             }
         }
-
-        // Rotar el sprite del enemigo para que mire en la direcci�n del movimiento
-        // 
-        // if (movingRight && transform.localScale.x < 0 || !movingRight && transform.localScale.x > 0)
-        // {
-        //     transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-        // }
     }
 
     void DetectPlayer()
     {
-        // Raycast para detectar al jugador
         Vector2 directionToPlayer = (playerTransform.position - transform.position).normalized;
+
+        // Raycast para buscar obstáculos o jugador
         RaycastHit2D hit = Physics2D.Raycast(transform.position, directionToPlayer, detectionRange, playerLayer | obstacleLayer);
 
-        // Visualizar el raycast en el editor (solo para depuraci�n)
         Debug.DrawRay(transform.position, directionToPlayer * detectionRange, Color.yellow);
 
         if (hit.collider != null)
         {
+            // Si el raycast golpea directamente al jugador, es detectado
             if (hit.collider.CompareTag("Player"))
             {
-                // Si el raycast golpe� al jugador directamente
                 Debug.Log("Jugador detectado!");
-                // Aqu� puedes a�adir la l�gica para que el jugador pierda o se active una alarma
-                // Por ejemplo:
-                // GameManager.Instance.GameOver(); // Si tienes un GameManager
-                // SceneManager.LoadScene("GameOverScene"); // Para reiniciar la escena
-                StartCoroutine(HandlePlayerDetection()); // Se llama a la corrutina de la detección del player
-
-            }
-            else if (hit.collider.CompareTag("Obstacle") && hit.collider.GetComponent<ObstacleController>() != null)
-            {
-                // Si el raycast golpe� un obst�culo ANTES de golpear al jugador
-                // Y el obst�culo es un muro que puede ocultar al jugador
-                float distanceToObstacle = Vector2.Distance(transform.position, hit.collider.transform.position);
-                float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
-
-                // Si el jugador est� detr�s del obst�culo y el obst�culo es un muro
-                if (distanceToPlayer > distanceToObstacle && hit.collider.GetComponent<ObstacleController>().isHidingSpot)
+                // Asegurarse de que el jugador esté realmente dentro del rango de detección y no detrás de un lugar para esconderse
+                if (Vector2.Distance(transform.position, playerTransform.position) <= detectionRange)
                 {
-                    Debug.Log("Jugador oculto detr�s del muro.");
-                    // El jugador no es detectado
+                    StartCoroutine(HandlePlayerDetection());
                 }
-                else if (hit.collider.CompareTag("Player"))
+            }
+            // Si el raycast golpea un obstáculo
+            else if (hit.collider.CompareTag("Obstacle"))
+            {
+                ObstacleController obstacle = hit.collider.GetComponent<ObstacleController>();
+                // Verificar si el obstáculo es un lugar para esconderse y está entre el enemigo y el jugador
+                if (obstacle != null && obstacle.isHidingSpot)
                 {
-                    // Esta condicion es para el caso en que el raycast golpea directamente al jugador y no un obstaculo
-                    Debug.Log("Jugador detectado!");
-                    // Luego aqui implementar lógica de gameOver
+                    // Ahora, lanza otro rayo *solo* para el jugador, comenzando desde la posición del obstáculo
+                    // Esto verifica si el jugador está realmente detrás del obstáculo desde la perspectiva del enemigo.
+                    RaycastHit2D playerBehindObstacleHit = Physics2D.Raycast(hit.point + directionToPlayer * 0.01f, directionToPlayer, detectionRange - hit.distance, playerLayer);
+
+                    if (playerBehindObstacleHit.collider != null && playerBehindObstacleHit.collider.CompareTag("Player"))
+                    {
+                        Debug.Log("Jugador está oculto detrás del punto de escondite.");
+                        // El jugador está oculto, no activar la detección
+                    }
+                    else
+                    {
+                        Debug.Log("Obstáculo (no es un punto de escondite, o el jugador no está detrás). Jugador potencial detectado.");
+                        // Si el obstáculo es un lugar para esconderse pero el jugador NO está detrás de él,
+                        // o si no es un lugar para esconderse en absoluto, y el jugador *está* dentro del rango
+                        // pero no fue golpeado por el rayo inicial debido a este obstáculo, debemos tener cuidado.
+                        // La detección principal del jugador debe ser manejada por el golpe directo a la etiqueta "Player".
+                        // Este bloque 'else' aquí principalmente captura casos donde un obstáculo es golpeado pero el jugador no está oculto.
+                        // Para la detección directa del jugador, el primer 'if (hit.collider.CompareTag("Player"))' tiene prioridad.
+                    }
+                }
+                else
+                {
+                    Debug.Log("Obstáculo (no es un punto de escondite).");
+                    // Si es solo un obstáculo normal y no un lugar para esconderse, entonces simplemente bloquea la vista.
+                    // El jugador no será detectado si este obstáculo está en el camino.
                 }
             }
         }
     }
-    //Visualizar el rango de detecci�n en el editor
+
+
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.cyan;
@@ -131,22 +138,23 @@ public class EnemyPatrol : MonoBehaviour
             }
         }
     }
+
     private IEnumerator HandlePlayerDetection()
     {
         Debug.Log("Jugador detectado: congelando y reiniciando en 2 segundos");
 
-        // Con esto se detiiene el player
-        var playerController = playerTransform.GetComponent<PlayerController>();
+        // El PlayerController no existe, debería ser MovimientoJugador
+        var playerController = playerTransform.GetComponent<MovimientoJugador>();
         if (playerController != null)
         {
-            playerController.OnDetected();
+            playerController.PausarMovimiento(); // Usar el método existente PausarMovimiento
         }
         this.enabled = false;
-        UIController.Instance.ShowBustedMessage();
+        // Asumiendo que UIController existe y tiene ShowBustedMessage()
+        // UIController.Instance.ShowBustedMessage();
 
         yield return new WaitForSeconds(2f);
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); //Utilicé buildIndex ya que la idea es reiniciar la escena actual
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
-
 }
