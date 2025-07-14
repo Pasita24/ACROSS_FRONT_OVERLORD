@@ -147,7 +147,8 @@ public class EnemyPatrol : MonoBehaviour
         var playerController = playerTransform.GetComponent<MovimientoJugador>();
         if (playerController != null)
         {
-            playerController.PausarMovimiento(); // Usar el método existente PausarMovimiento
+            playerController.TomarDaño(1f);
+
         }
         this.enabled = false;
         // Asumiendo que UIController existe y tiene ShowBustedMessage()

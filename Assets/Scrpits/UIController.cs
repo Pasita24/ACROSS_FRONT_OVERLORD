@@ -1,11 +1,25 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
+using System;
 
 public class UIController : MonoBehaviour
 {
     public static UIController Instance;
 
-    [SerializeField] private GameObject bustedText;
+    [SerializeField] private GameObject MenuGameover;
+    private MovimientoJugador Jugador;
+
+    private void Start()
+    {
+        Jugador = GameObject.FindGameObjectWithTag("Player").GetComponent<MovimientoJugador>();
+        Jugador.MuerteJugador += ActivarMenu;
+    }
+
+    private void ActivarMenu(object sender, EventArgs e)
+    {
+        MenuGameover.SetActive(true);
+    }
 
     private void Awake()
     {
@@ -13,8 +27,13 @@ public class UIController : MonoBehaviour
             Instance = this;
     }
 
-    public void ShowBustedMessage()
+    public void Reiniciar()
     {
-        bustedText.SetActive(true);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void SalirAmenu(string nombre)
+    {
+        SceneManager.LoadScene(nombre);
     }
 }
