@@ -198,7 +198,12 @@ public class MovimientoJugador : MonoBehaviour
         Instantiate(efectoMuerte, transform.position, Quaternion.identity);
         Destroy(gameObject);
     }
-    
+    public void HabilitarJugador()
+    {
+        movimientoPausado = false;
+    }
+
+
     public void PausarMovimiento()
     {
         movimientoPausado = true;
