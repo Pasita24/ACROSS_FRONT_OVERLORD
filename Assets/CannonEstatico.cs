@@ -10,6 +10,7 @@ public class CanonEstatico : MonoBehaviour
     public float radioDeteccion = 10f;
     public LayerMask capaJugador;
     public float tiempoEntreDisparos = 2f;
+    public bool seguirAlJugador = true;
 
     private float tiempoSiguienteDisparo = 0f;
     private Animator animator;
@@ -29,7 +30,7 @@ public class CanonEstatico : MonoBehaviour
         bool jugadorEnRango = distancia <= radioDeteccion;
 
         // Mira hacia el jugador
-        if (jugadorEnRango)
+        if (jugadorEnRango && seguirAlJugador)
         {
             transform.localScale = new Vector3(jugador.position.x < transform.position.x ? -1 : 1, 1, 1);
         }
@@ -45,7 +46,10 @@ public class CanonEstatico : MonoBehaviour
     // Este método se llama desde un evento de la animación en el frame exacto del disparo
     public void Disparar()
     {
-        Instantiate(balaPrefab, puntoDisparo.position, Quaternion.identity);
+        Vector2 direccion = transform.localScale.x > 0 ? Vector2.right : Vector2.left;
+
+        GameObject bala = Instantiate(balaPrefab, puntoDisparo.position, Quaternion.identity);
+        bala.GetComponent<BalaCanon>()?.SetDireccion(direccion);
     }
 }
 

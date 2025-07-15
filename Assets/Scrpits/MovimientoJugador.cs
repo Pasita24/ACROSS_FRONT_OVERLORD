@@ -51,6 +51,8 @@ public class MovimientoJugador : MonoBehaviour
     [SerializeField] private Vector2 colliderDashSize = new Vector2(1.5f, 0.5f);
     [SerializeField] private Vector2 colliderDashOffset = new Vector2(0f, -0.25f);
 
+    [SerializeField] private GameOverManager gameOverManager;
+
     public event EventHandler MuerteJugador;
     private InventarioMano inventarioMano;
 
@@ -206,6 +208,7 @@ public class MovimientoJugador : MonoBehaviour
     private void Muerte()
     {
         Instantiate(efectoMuerte, transform.position, Quaternion.identity);
+        gameOverManager.ActivarGameOver(); // Llamar al Game Over
         Destroy(gameObject);
     }
     public void HabilitarJugador()
