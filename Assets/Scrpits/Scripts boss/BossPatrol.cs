@@ -56,16 +56,32 @@ public class BossPatrol : MonoBehaviour
         {
             if (currentWaitTime <= 0)
             {
-                // Avanza al siguiente punto (con wrap-around al final del array)
+                // Guarda posición anterior para detectar dirección
+                Vector3 lastPosition = patrolPoints[currentPatrolPointIndex].position;
+
+                // Cambia al siguiente punto
                 currentPatrolPointIndex = (currentPatrolPointIndex + 1) % patrolPoints.Length;
-                currentWaitTime = waitTime; // Reinicia el contador de espera
+                currentWaitTime = waitTime;
+
+                // Verifica si el boss debe girar hacia la derecha o izquierda
+                if ((patrolPoints[currentPatrolPointIndex].position.x - lastPosition.x) > 0f)
+                {
+                    // Mira a la derecha (rotación Y = 0°)
+                    transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+                }
+                else
+                {
+                    // Mira a la izquierda (rotación Y = 180°)
+                    transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+                }
+
             }
             else
             {
-                // Reduce el tiempo de espera restante
                 currentWaitTime -= Time.deltaTime;
             }
         }
+
     }
 
     /// <summary>
@@ -75,29 +91,32 @@ public class BossPatrol : MonoBehaviour
     {
         if (playerTransform == null) return;
 
-        Vector2 directionToPlayer = (playerTransform.position - transform.position).normalized;
+        // Dirección hacia la que el boss mira (derecha o izquierda)
+        Vector2 forwardDirection = transform.right;
 
+
+
+        // Lanza un raycast hacia adelante
         RaycastHit2D hit = Physics2D.Raycast(
             transform.position,
-            directionToPlayer,
+            forwardDirection,
             detectionRange,
             playerLayer | obstacleLayer
         );
-        UnityEngine.Debug.DrawRay(transform.position, directionToPlayer * detectionRange, Color.red);
 
+        UnityEngine.Debug.DrawRay(transform.position, forwardDirection * detectionRange, Color.red);
 
         if (hit.collider != null)
         {
             if (hit.collider.CompareTag("Player"))
             {
-                // ¡Jugador visible directamente!
-                UnityEngine.Debug.Log("Jugador detectado. Reiniciando nivel.");
+                // El jugador está al frente y visible
+                UnityEngine.Debug.Log("Jugador detectado al frente. Reiniciando nivel.");
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
             else
             {
-                // Hay un obstáculo entre el boss y el jugador → no hacer nada
-                UnityEngine.Debug.Log("Jugador oculto detrás de un obstáculo. No detectado.");
+                UnityEngine.Debug.Log("Vista bloqueada por obstáculo.");
             }
         }
     }

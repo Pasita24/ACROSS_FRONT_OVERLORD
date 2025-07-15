@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
 public class MovimientoJugador : MonoBehaviour
 {
     private Rigidbody2D rb2D;
@@ -51,6 +52,8 @@ public class MovimientoJugador : MonoBehaviour
     [SerializeField] private Vector2 colliderDashOffset = new Vector2(0f, -0.25f);
 
     public event EventHandler MuerteJugador;
+    private InventarioMano inventarioMano;
+
 
     private void Start()
     {
@@ -60,6 +63,8 @@ public class MovimientoJugador : MonoBehaviour
         boxCollider = GetComponent<BoxCollider2D>();
         colliderOriginalSize = boxCollider.size;
         colliderOriginalOffset = boxCollider.offset;
+        inventarioMano = GetComponent<InventarioMano>();
+
     }
 
     private void Update()
@@ -81,6 +86,11 @@ public class MovimientoJugador : MonoBehaviour
         {
             IniciarDash();
         }
+        if (Input.GetKeyDown(KeyCode.F) && inventarioMano != null && inventarioMano.objetoActual == InventarioMano.ObjetoEnMano.Ladrillo)
+        {
+            AtacarConLadrillo();
+        }
+
     }
 
     private void FixedUpdate()
@@ -209,6 +219,51 @@ public class MovimientoJugador : MonoBehaviour
         movimientoPausado = true;
         rb2D.velocity = new Vector2(0f, rb2D.velocity.y);
     }
+    private void AtacarConLadrillo()
+    {
+        Vector2 direccionAtaque = mirandoDerecha ? Vector2.right : Vector2.left;
+        Vector2 origen = (Vector2)transform.position + direccionAtaque * 0.8f; // Un poco al frente del jugador
+        float radio = 2f;
+
+        Collider2D hit = Physics2D.OverlapCircle(origen, radio, LayerMask.GetMask("Enemy"));
+
+        if (hit != null)
+        {
+            BossVida bossVida = hit.GetComponent<BossVida>();
+            if (bossVida != null)
+            {
+                bossVida.TomarDaño(1); // Daño arbitrario
+                UnityEngine.Debug.Log("¡Boss golpeado con ladrillo!");
+                inventarioMano.UsarObjeto(); // Solo se usa si daña al boss
+            }
+            else
+            {
+                UnityEngine.Debug.Log("Golpeó a algo que no es el boss.");
+            }
+        }
+        else
+        {
+            UnityEngine.Debug.Log("Golpeó al aire.");
+        }
+
+        // Visualización opcional
+        UnityEngine.Debug.DrawLine(transform.position, origen, Color.red, 0.5f);
+    }
+    private void OnDrawGizmosSelected()
+    {
+        if (inventarioMano != null && inventarioMano.objetoActual == InventarioMano.ObjetoEnMano.Ladrillo)
+        {
+            Vector2 direccion = mirandoDerecha ? Vector2.right : Vector2.left;
+            Vector2 origen = (Vector2)transform.position + direccion * 0.8f;
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(origen, 0.6f);
+        }
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireCube(controladorSuelo.position, dimensionesCaja);
+    }
+
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         // Verifica si el objeto con el que colisionó tiene el tag "Gun"
@@ -220,5 +275,11 @@ public class MovimientoJugador : MonoBehaviour
             // Carga la siguiente escena en el orden de Build Settings
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
+        if (other.CompareTag("Ladrillo"))
+        {
+            inventarioMano.TomarLadrillo();
+            other.gameObject.SetActive(false); // Desaparece el ladrillo
+        }
+
     }
 }
