@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8265104332986815921}
   - component: {fileID: 6075106120474863260}
   - component: {fileID: 2705885161637781546}
-  - component: {fileID: 8858210546143491592}
+  - component: {fileID: 9087207171233240818}
   m_Layer: 0
   m_Name: Proyectil
   m_TagString: Untagged
@@ -149,7 +149,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &8858210546143491592
+--- !u!114 &9087207171233240818
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -158,9 +158,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1012354058272858407}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d1d4459bab6bca4d93eb8cc74769788, type: 3}
+  m_Script: {fileID: 11500000, guid: 60f76729fd28174458965c6b85f7c2f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocidad: 10
+  velocidad: 50
   "da\xF1o": 1
   tiempoVida: 5
