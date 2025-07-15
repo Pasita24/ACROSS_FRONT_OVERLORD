@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f4a308dae7ffd048a8b0eb8d5ae4a02, type: 3}
   m_Name: Player
   m_EditorClassIdentifier: 
-  characterPhoto: {fileID: 453097051, guid: d5ece46e2169c24469a6179d8de3f6fd, type: 3}
-  characterName: Player
+  characterPhoto: {fileID: 21300000, guid: 8b098852bebca2849bc37f0178e8bc7a, type: 3}
+  characterName: Osvald
