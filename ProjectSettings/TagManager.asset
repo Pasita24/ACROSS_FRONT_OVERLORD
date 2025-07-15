@@ -16,6 +16,7 @@ TagManager:
   - Gun
   - Canon
   - Boss
+  - Ladrillo
   layers:
   - Default
   - TransparentFX

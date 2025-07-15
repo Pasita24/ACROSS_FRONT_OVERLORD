@@ -6,8 +6,10 @@ public class InventarioMano : MonoBehaviour
     public enum ObjetoEnMano
     {
         Nada,
-        Granada
+        Granada,
+        Ladrillo
     }
+
 
     public ObjetoEnMano objetoActual = ObjetoEnMano.Nada;
 
@@ -24,6 +26,15 @@ public class InventarioMano : MonoBehaviour
             UnityEngine.Debug.Log("Granada tomada");
         }
     }
+    public void TomarLadrillo()
+    {
+        if (objetoActual == ObjetoEnMano.Nada)
+        {
+            objetoActual = ObjetoEnMano.Ladrillo;
+            UnityEngine.Debug.Log("Ladrillo tomado");
+        }
+    }
+
 
     public void UsarObjeto()
     {

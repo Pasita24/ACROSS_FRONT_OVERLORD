@@ -37,7 +37,7 @@ public class CajaGranadas : MonoBehaviour
     {
         InventarioMano inventario = other.GetComponent<InventarioMano>();
 
-        if (inventario != null && !inventario.TieneGranada() && Input.GetKeyDown(KeyCode.E))
+        if (inventario != null && !inventario.TieneGranada() && Input.GetKeyDown(KeyCode.F))
         {
             inventario.TomarGranada();
             UnityEngine.Debug.Log("Jugador tomó una granada");
