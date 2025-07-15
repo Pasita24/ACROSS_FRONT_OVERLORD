@@ -15,6 +15,7 @@ TagManager:
   - Balcon
   - Gun
   - Canon
+  - Boss
   layers:
   - Default
   - TransparentFX
@@ -27,7 +28,7 @@ TagManager:
   - Player
   - Enemy
   - Escaleras
-  - 
+  - Boss
   - 
   - 
   - 
