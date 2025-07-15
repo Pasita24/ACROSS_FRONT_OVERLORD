@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class Tocando : MonoBehaviour
 {
-    [SerializeField] public MonoBehaviour punto;
+    [SerializeField] private MonoBehaviour controlador;
 
-    public void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
-            punto.enabled = true;
+            controlador.enabled = false;
         }
     }
 }

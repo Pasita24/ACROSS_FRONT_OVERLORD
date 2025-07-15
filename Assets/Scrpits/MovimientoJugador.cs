@@ -32,9 +32,15 @@ public class MovimientoJugador : MonoBehaviour
     [SerializeField] private Vector3 dimensionesCaja;
     [SerializeField] private bool enSuelo;
     private bool salto = false;
+    [Header("Escaleras")]
+    [SerializeField] private float velocidadEscalera = 3f;
+    private bool enEscalera = false;
 
     [Header("Animación")]
     private Animator animator;
+
+    [Header("UI Dash")]
+    [SerializeField] private TextMeshProUGUI textoDashUI;
 
     [Header("Dash")]
     [SerializeField] private float fuerzaDash = 15f;
@@ -66,6 +72,7 @@ public class MovimientoJugador : MonoBehaviour
         colliderOriginalSize = boxCollider.size;
         colliderOriginalOffset = boxCollider.offset;
         inventarioMano = GetComponent<InventarioMano>();
+        textoDashUI.text = "Dash Listo";
 
     }
 
@@ -114,6 +121,15 @@ public class MovimientoJugador : MonoBehaviour
         }
 
         enSuelo = Physics2D.OverlapBox(controladorSuelo.position, dimensionesCaja, 0f, queEsSuelo);
+        if (enEscalera)
+        {
+            rb2D.gravityScale = 0;
+            rb2D.velocity = new Vector2(rb2D.velocity.x, input.y * velocidadEscalera);
+        }
+        else
+        {
+            rb2D.gravityScale = 3; // O el valor original
+        }
         Mover(movimientoHorizontal * Time.fixedDeltaTime, salto);
         salto = false;
         
@@ -168,7 +184,8 @@ public class MovimientoJugador : MonoBehaviour
         float deltaOffsetY = (colliderOriginalSize.y - colliderDashSize.y) / 2f;
         boxCollider.offset = new Vector2(colliderOriginalOffset.x, colliderOriginalOffset.y - deltaOffsetY);
 
-        Invoke(nameof(HabilitarDash), tiempoEntreDashes);
+        StartCoroutine(CooldownDash());
+        textoDashUI.text = "Reiniciando Dash...";
     }
 
     private void TerminarDash()
@@ -177,9 +194,18 @@ public class MovimientoJugador : MonoBehaviour
         boxCollider.offset = colliderOriginalOffset;
     }
 
-    private void HabilitarDash()
+    private IEnumerator CooldownDash()
     {
+        float tiempoRestante = tiempoEntreDashes;
+        while (tiempoRestante > 0)
+        {
+            textoDashUI.text = "Reiniciando..." + tiempoRestante.ToString("F1") + "s";
+            yield return new WaitForSeconds(0.1f);
+            tiempoRestante -= 0.1f;
+        }
+
         puedeHacerDash = true;
+        textoDashUI.text = "Dash Listo";
     }
 
     private void OnDrawGizmos()
@@ -269,20 +295,30 @@ public class MovimientoJugador : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Verifica si el objeto con el que colisionó tiene el tag "Gun"
+        if (other.gameObject.layer == LayerMask.NameToLayer("Escaleras"))
+        {
+            enEscalera = true;
+        }
+
         if (other.CompareTag("Gun"))
         {
             Debug.Log("Pistola recogida. Cambiando de nivel...");
-            // Desactiva el objeto de la pistola para que no se pueda recoger de nuevo
             other.gameObject.SetActive(false);
-            // Carga la siguiente escena en el orden de Build Settings
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
+
         if (other.CompareTag("Ladrillo"))
         {
             inventarioMano.TomarLadrillo();
-            other.gameObject.SetActive(false); // Desaparece el ladrillo
+            other.gameObject.SetActive(false);
         }
+    }
 
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Escaleras"))
+        {
+            enEscalera = false;
+        }
     }
 }
