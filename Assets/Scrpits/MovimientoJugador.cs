@@ -50,6 +50,7 @@ public class MovimientoJugador : MonoBehaviour
     private bool estaHaciendoDash = false;
     private float tiempoDashRestante = 0f;
     private float direccionDash = 1f;
+    private bool estaMuerto = false;
 
     private BoxCollider2D boxCollider;
     private Vector2 colliderOriginalSize;
@@ -216,11 +217,14 @@ public class MovimientoJugador : MonoBehaviour
 
     public void TomarDaño(float daño)
     {
+        if (estaMuerto) return; 
+
         vida -= daño;
         ActualizarTextoVida();
 
         if (vida <= 0)
         {
+            estaMuerto = true;
             MuerteJugador?.Invoke(this, EventArgs.Empty);
             Muerte();
         }

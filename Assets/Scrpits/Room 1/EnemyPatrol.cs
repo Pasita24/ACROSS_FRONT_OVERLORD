@@ -93,21 +93,6 @@ public class EnemyPatrol : MonoBehaviour
                     // Esto verifica si el jugador está realmente detrás del obstáculo desde la perspectiva del enemigo.
                     RaycastHit2D playerBehindObstacleHit = Physics2D.Raycast(hit.point + directionToPlayer * 0.01f, directionToPlayer, detectionRange - hit.distance, playerLayer);
 
-                    if (playerBehindObstacleHit.collider != null && playerBehindObstacleHit.collider.CompareTag("Player"))
-                    {
-                        Debug.Log("Jugador está oculto detrás del punto de escondite.");
-                        // El jugador está oculto, no activar la detección
-                    }
-                    else
-                    {
-                        Debug.Log("Obstáculo (no es un punto de escondite, o el jugador no está detrás). Jugador potencial detectado.");
-                    }
-                }
-                else
-                {
-                    Debug.Log("Obstáculo (no es un punto de escondite).");
-                    // Si es solo un obstáculo normal y no un lugar para esconderse, entonces simplemente bloquea la vista.
-                    // El jugador no será detectado si este obstáculo está en el camino.
                 }
             }
         }
