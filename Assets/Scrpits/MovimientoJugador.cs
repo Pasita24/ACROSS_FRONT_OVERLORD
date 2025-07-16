@@ -211,13 +211,13 @@ public class MovimientoJugador : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Verifica si el objeto con el que colisionó tiene el tag "Gun"
+  
         if (other.CompareTag("Gun"))
         {
             Debug.Log("Pistola recogida. Cambiando de nivel...");
-            // Desactiva el objeto de la pistola para que no se pueda recoger de nuevo
+  
             other.gameObject.SetActive(false);
-            // Carga la siguiente escena en el orden de Build Settings
+    
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
     }
