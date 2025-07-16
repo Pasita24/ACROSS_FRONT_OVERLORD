@@ -302,7 +302,7 @@ public class MovimientoJugador : MonoBehaviour
 
         if (other.CompareTag("Gun"))
         {
-            Debug.Log("Pistola recogida. Cambiando de nivel...");
+            //Debug.Log("Pistola recogida. Cambiando de nivel...");
             other.gameObject.SetActive(false);
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
