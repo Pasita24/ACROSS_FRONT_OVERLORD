@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using TMPro;
 
 public class CanonEnemigo : MonoBehaviour
 {
@@ -21,11 +22,15 @@ public class CanonEnemigo : MonoBehaviour
     private bool puedeDisparar = true;
     private bool estaMuerto = false;
 
+    [Header("UI")]
+    [SerializeField] private TextMeshProUGUI textoVida;
+
     private void Start()
     {
         objetivoJugador = GameObject.FindGameObjectWithTag("Player")?.transform;
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        ActualizarTextoVida(); // <-- aquí
     }
 
     private void Update()
@@ -47,7 +52,7 @@ public class CanonEnemigo : MonoBehaviour
         // Apunta al jugador
         Vector2 direccion = (objetivoJugador.position - puntoDisparo.position).normalized;
         GameObject bala = Instantiate(balaPrefab, puntoDisparo.position, Quaternion.identity);
-        bala.GetComponent<Rigidbody2D>().velocity = direccion * 5f; // puedes ajustar velocidad
+        bala.GetComponent<Rigidbody2D>().velocity = direccion * 10f; // puedes ajustar velocidad
 
         yield return new WaitForSeconds(tiempoEntreDisparos);
         puedeDisparar = true;
@@ -58,6 +63,7 @@ public class CanonEnemigo : MonoBehaviour
         if (estaMuerto) return;
 
         vida -= daño;
+        ActualizarTextoVida();
 
         StartCoroutine(ParpadeoBlanco());
 
@@ -66,6 +72,12 @@ public class CanonEnemigo : MonoBehaviour
             estaMuerto = true;
             Morir();
         }
+    }
+
+    private void ActualizarTextoVida()
+    {
+        if (textoVida != null)
+            textoVida.text = "Tanque: " + Mathf.Max(vida, 0).ToString("0");
     }
 
     private IEnumerator ParpadeoBlanco()
