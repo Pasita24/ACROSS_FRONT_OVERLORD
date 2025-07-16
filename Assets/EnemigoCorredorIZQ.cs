@@ -5,7 +5,7 @@ public class EnemigoCorredorIZQ : MonoBehaviour
     [SerializeField] private float velocidad;
     [SerializeField] private Transform controladorSuelo;
     [SerializeField] private float distancia;
-    [SerializeField] private bool moviendoDerecha;
+    [SerializeField] private bool moviendoizquierda;
 
     private Rigidbody2D rb;
     private Animator animator;
@@ -15,11 +15,6 @@ public class EnemigoCorredorIZQ : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-
-        if (!moviendoDerecha && velocidad > 0)
-        {
-            velocidad *= 1; // Esto no cambia nada
-        }
     }
 
     private void FixedUpdate()
@@ -41,9 +36,9 @@ public class EnemigoCorredorIZQ : MonoBehaviour
 
     private void Girar()
     {
-        moviendoDerecha = !moviendoDerecha;
-        transform.eulerAngles = new Vector3(0, transform.eulerAngles.y + 180, 0);
-        velocidad *= -1;
+        moviendoizquierda = !moviendoizquierda;
+        transform.eulerAngles = new Vector3(0, transform.eulerAngles.y - 180, 0);
+        velocidad *= 1;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
