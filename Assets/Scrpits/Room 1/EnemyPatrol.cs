@@ -101,12 +101,6 @@ public class EnemyPatrol : MonoBehaviour
                     else
                     {
                         Debug.Log("Obstáculo (no es un punto de escondite, o el jugador no está detrás). Jugador potencial detectado.");
-                        // Si el obstáculo es un lugar para esconderse pero el jugador NO está detrás de él,
-                        // o si no es un lugar para esconderse en absoluto, y el jugador *está* dentro del rango
-                        // pero no fue golpeado por el rayo inicial debido a este obstáculo, debemos tener cuidado.
-                        // La detección principal del jugador debe ser manejada por el golpe directo a la etiqueta "Player".
-                        // Este bloque 'else' aquí principalmente captura casos donde un obstáculo es golpeado pero el jugador no está oculto.
-                        // Para la detección directa del jugador, el primer 'if (hit.collider.CompareTag("Player"))' tiene prioridad.
                     }
                 }
                 else
@@ -141,21 +135,17 @@ public class EnemyPatrol : MonoBehaviour
 
     private IEnumerator HandlePlayerDetection()
     {
-        Debug.Log("Jugador detectado: congelando y reiniciando en 2 segundos");
+ 
 
-        // El PlayerController no existe, debería ser MovimientoJugador
         var playerController = playerTransform.GetComponent<MovimientoJugador>();
         if (playerController != null)
         {
             playerController.TomarDaño(1f);
+            playerController.PausarMovimiento();
 
         }
         this.enabled = false;
-        // Asumiendo que UIController existe y tiene ShowBustedMessage()
-        // UIController.Instance.ShowBustedMessage();
+        yield return new WaitForSeconds(1000000000f);
 
-        yield return new WaitForSeconds(2f);
-
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
