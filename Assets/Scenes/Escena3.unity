@@ -8733,6 +8733,7 @@ MonoBehaviour:
   fuerzaDash: 15
   duracionDash: 0.2
   tiempoEntreDashes: 1
+  prefabGolpeLadrillo: {fileID: 830057637371960893, guid: 5c180bfe05803004aa0e15f5249d3f21, type: 3}
   colliderDashSize: {x: 1.5, y: 0.5}
   colliderDashOffset: {x: 0, y: -0.25}
   gameOverManager: {fileID: 0}

@@ -46,6 +46,9 @@ public class MovimientoJugador : MonoBehaviour
     [SerializeField] private float fuerzaDash = 15f;
     [SerializeField] private float duracionDash = 0.2f;
     [SerializeField] private float tiempoEntreDashes = 1f;
+    [Header("Efecto Golpe Ladrillo")]
+    [SerializeField] private GameObject prefabGolpeLadrillo;
+
     private bool puedeHacerDash = true;
     private bool estaHaciendoDash = false;
     private float tiempoDashRestante = 0f;
@@ -260,12 +263,18 @@ public class MovimientoJugador : MonoBehaviour
 
         Collider2D hit = Physics2D.OverlapCircle(origen, radio, LayerMask.GetMask("Enemy"));
 
+        if (prefabGolpeLadrillo != null)
+        {
+            Instantiate(prefabGolpeLadrillo, transform.position, Quaternion.identity);
+        }
         if (hit != null)
         {
             BossVida bossVida = hit.GetComponent<BossVida>();
             if (bossVida != null)
             {
                 bossVida.TomarDaño(1); // Daño arbitrario
+                                       // Instanciar el efecto visual del golpe
+                
                 UnityEngine.Debug.Log("¡Boss golpeado con ladrillo!");
                 inventarioMano.UsarObjeto(); // Solo se usa si daña al boss
             }
