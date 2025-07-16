@@ -319,7 +319,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: JUGAR
+  m_text: SALIR
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f157c6b61f2d7544d97666c4e4115322, type: 2}
   m_sharedMaterial: {fileID: 1590617150101561768, guid: f157c6b61f2d7544d97666c4e4115322, type: 2}
