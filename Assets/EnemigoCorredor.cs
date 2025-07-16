@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EnemigoCorredor : MonoBehaviour
 {
-        [SerializeField] private float velocidad;
+    [SerializeField] private float velocidad;
     [SerializeField] private Transform controladorSuelo;
     [SerializeField] private float distancia;
     [SerializeField] private bool moviendoDerecha;

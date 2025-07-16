@@ -45,9 +45,9 @@ GameObject:
   - component: {fileID: 2865744413601559596}
   - component: {fileID: 9158588958040126454}
   - component: {fileID: 133602314549085211}
-  - component: {fileID: 2841690278634182909}
+  - component: {fileID: 5924283594556261753}
   m_Layer: 9
-  m_Name: PatrulleroIZQ
+  m_Name: PatrulleroKill 3
   m_TagString: Enemigo
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -148,7 +148,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 5
+  m_Constraints: 4
 --- !u!61 &2865744413601559596
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -229,7 +229,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 1
   efectoMuerte: {fileID: 1014282450971576033, guid: 12d7ec2d0ee2b1b43971cfacf9714e63, type: 3}
---- !u!114 &2841690278634182909
+--- !u!114 &5924283594556261753
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -238,13 +238,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 5532462801468480101}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa5a1fb40ffcac14eaa44fd469434357, type: 3}
+  m_Script: {fileID: 11500000, guid: 4e3b4e411ae4f6545a9129f7ce13af13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   velocidad: 3
   controladorSuelo: {fileID: 2067697190539030529}
   distancia: 6
-  moviendoizquierda: 0
+  moviendoDerecha: 1
   "da\xF1oAlJugador": 999
 --- !u!1 &6235758983414982039
 GameObject:
