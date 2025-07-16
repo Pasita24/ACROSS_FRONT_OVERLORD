@@ -19,6 +19,7 @@ public class UIController : MonoBehaviour
     private void ActivarMenu(object sender, EventArgs e)
     {
         MenuGameover.SetActive(true);
+
     }
 
     private void Awake()
