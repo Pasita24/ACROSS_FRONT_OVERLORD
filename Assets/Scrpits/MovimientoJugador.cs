@@ -309,9 +309,17 @@ public class MovimientoJugador : MonoBehaviour
 
         if (other.CompareTag("Ladrillo"))
         {
-            inventarioMano.TomarLadrillo();
-            other.gameObject.SetActive(false);
+            if (inventarioMano.objetoActual == InventarioMano.ObjetoEnMano.Nada)
+            {
+                inventarioMano.TomarLadrillo();
+                other.gameObject.SetActive(false); // Solo desaparece si fue tomado
+            }
+            else
+            {
+                UnityEngine.Debug.Log("Ya tienes un objeto en la mano. No puedes tomar otro ladrillo.");
+            }
         }
+
     }
 
     private void OnTriggerExit2D(Collider2D other)
