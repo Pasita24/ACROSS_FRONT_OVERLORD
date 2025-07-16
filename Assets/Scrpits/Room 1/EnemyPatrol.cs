@@ -141,21 +141,20 @@ public class EnemyPatrol : MonoBehaviour
 
     private IEnumerator HandlePlayerDetection()
     {
-        Debug.Log("Jugador detectado: congelando y reiniciando en 2 segundos");
+ 
 
         // El PlayerController no existe, debería ser MovimientoJugador
         var playerController = playerTransform.GetComponent<MovimientoJugador>();
         if (playerController != null)
         {
             playerController.TomarDaño(1f);
+            playerController.PausarMovimiento();
 
         }
         this.enabled = false;
-        // Asumiendo que UIController existe y tiene ShowBustedMessage()
-        // UIController.Instance.ShowBustedMessage();
+        yield return new WaitForSeconds(1000000000f);
 
-        yield return new WaitForSeconds(2f);
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
